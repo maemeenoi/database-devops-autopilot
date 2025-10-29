@@ -1,0 +1,48 @@
+title: Database DevOps Autopilot
+description: A comprehensive training workshop for database DevOps automation
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Navigation settings
+header_pages:
+  - index.md
+  - training/flyway-autopilot/index.md
+  - docs/workshop-overview.md
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .vendor
+  - _vendor
+  - README.md
+
+# SEO settings
+url: "https://letsmakestuffgo.github.io"
+baseurl: "/database-devops-autopilot"
+
+# Social media
+github_username: LetsMakeStuffGo
+
+# Default settings
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "training/flyway-autopilot/labs"
+      type: "pages"
+    values:
+      layout: "lab"

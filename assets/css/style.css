@@ -1,0 +1,83 @@
+@import "minima";
+
+/* Custom styles for Database DevOps Autopilot */
+
+.lab-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.lab-header {
+  text-align: center;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #e1e4e8;
+  padding-bottom: 20px;
+}
+
+.lab-description {
+  font-size: 1.2em;
+  color: #666;
+  margin-top: 10px;
+}
+
+.lab-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e4e8;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  background-color: #0366d6;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #0256cc;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-button.prev {
+  margin-right: auto;
+}
+
+.nav-button.next {
+  margin-left: auto;
+}
+
+/* Code block improvements */
+.copy-button {
+  position: relative;
+  top: -5px;
+  right: 5px;
+  float: right;
+  background: #f6f8fa;
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background: #e1e4e8;
+}
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+  .lab-navigation {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-button {
+    text-align: center;
+  }
+}
