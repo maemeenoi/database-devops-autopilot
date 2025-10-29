@@ -8,9 +8,12 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
 
+remote_theme: mmistakes/minimal-mistakes
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+  - jekyll-include-cache
 
 # Navigation settings
 header_pages:
@@ -31,18 +34,55 @@ exclude:
 url: "https://letsmakestuffgo.github.io"
 baseurl: "/database-devops-autopilot"
 
+# Site Author
+author:
+  name: "LetsMakeStuffGo"
+  bio: "Database DevOps Training"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/LetsMakeStuffGo"
+
+# Minimal Mistakes Theme Settings
+minimal_mistakes_skin: "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+
+# Site Footer
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/LetsMakeStuffGo/database-devops-autopilot"
+
 # Social media
 github_username: LetsMakeStuffGo
 
 # Default settings
 defaults:
+  # _posts
   - scope:
       path: ""
-      type: "pages"
+      type: posts
     values:
-      layout: "default"
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: false
+      share: true
+      related: true
+  # _pages
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      author_profile: false
+  # Training labs
   - scope:
       path: "training/flyway-autopilot/labs"
       type: "pages"
     values:
-      layout: "lab"
+      layout: single
+      author_profile: false
+      toc: true
+      toc_label: "Lab Contents"
+      toc_icon: "cog"
