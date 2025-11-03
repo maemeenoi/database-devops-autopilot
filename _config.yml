@@ -15,11 +15,34 @@ plugins:
   - jekyll-sitemap
   - jekyll-include-cache
 
-# Navigation settings
-header_pages:
-  - index.md
-  - training/flyway-autopilot/index.md
-  - docs/workshop-overview.md
+# Minimal Mistakes Theme Settings
+minimal_mistakes_skin: "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+
+# Site Author
+author:
+  name: "LetsMakeStuffGo"
+  bio: "Database DevOps Training Specialists"
+  links:
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://www.makestuffgo.com"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/LetsMakeStuffGo"
+
+# Navigation
+masthead_title: "Database DevOps Autopilot"
+
+# Main navigation
+main:
+  - title: "Home"
+    url: /
+  - title: "Training"
+    url: /training/flyway-autopilot/
+  - title: "Documentation"
+    url: /docs/workshop-overview/
+  - title: "Prerequisites"
+    url: /docs/prerequisites/
 
 exclude:
   - Gemfile
@@ -34,24 +57,15 @@ exclude:
 url: "https://letsmakestuffgo.github.io"
 baseurl: "/database-devops-autopilot"
 
-# Site Author
-author:
-  name: "LetsMakeStuffGo"
-  bio: "Database DevOps Training"
-  links:
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/LetsMakeStuffGo"
-
-# Minimal Mistakes Theme Settings
-minimal_mistakes_skin: "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
-
 # Site Footer
 footer:
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/LetsMakeStuffGo/database-devops-autopilot"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://www.makestuffgo.com"
 
 # Social media
 github_username: LetsMakeStuffGo
@@ -86,3 +100,9 @@ defaults:
       toc: true
       toc_label: "Lab Contents"
       toc_icon: "cog"
+
+# Collections
+collections:
+  training:
+    output: true
+    permalink: /:collection/:name/

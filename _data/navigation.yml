@@ -5,6 +5,8 @@ main:
     url: /training/flyway-autopilot/
   - title: "Documentation"
     url: /docs/workshop-overview/
+  - title: "Prerequisites"
+    url: /docs/prerequisites/
 
 training:
   - title: "Getting Started"

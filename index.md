@@ -1,13 +1,42 @@
 ---
-layout: home
-title: Database DevOps Autopilot
+layout: splash
+title: "Database DevOps Autopilot"
+header:
+  overlay_color: "#000"
+  overlay_filter: "0.5"
+  overlay_image: /assets/images/database-hero.jpg
+  actions:
+    - label: "Start Training"
+      url: "/training/flyway-autopilot/"
+excerpt: "Master enterprise-grade database DevOps practices with automated, reliable, and scalable migration pipelines using Flyway."
+feature_row:
+  - image_path: /assets/images/flyway-logo.png
+    title: "Flyway Autopilot"
+    excerpt: "Learn comprehensive database migration strategies with Flyway's powerful automation framework."
+    url: "/training/flyway-autopilot/"
+    btn_label: "Start Training"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/devops-icon.png
+    title: "CI/CD Integration"
+    excerpt: "Integrate database changes seamlessly into your existing DevOps pipelines and workflows."
+    url: "/docs/workshop-overview/"
+    btn_label: "Learn More"
+    btn_class: "btn--primary"
+  - image_path: /assets/images/monitoring-icon.png
+    title: "Production Ready"
+    excerpt: "Implement monitoring, rollback strategies, and enterprise-grade deployment patterns."
+    url: "/docs/prerequisites/"
+    btn_label: "Get Started"
+    btn_class: "btn--primary"
 ---
 
-# Database DevOps Autopilot: Flyway Migration Training
+{% include feature_row %}
 
-## Summary
+## Database DevOps Autopilot: Flyway Migration Training
 
-This comprehensive workshop is a deep dive into database DevOps automation using Flyway, where you will learn practical techniques for managing database schema changes, version control, and automated deployments. Our exploration begins with foundational CI/CD capabilities for database migrations, ensuring your database changes are versioned, tested, and deployed consistently across all environments. You'll master enterprise-grade database DevOps practices using Flyway's powerful migration framework, applicable to SQL Server, PostgreSQL, MySQL, and other major database platforms. We conclude with advanced topics including rollback strategies, environment-specific deployments, and integrating database changes with your application delivery pipeline.
+This comprehensive workshop is a deep dive into database DevOps automation using Flyway, where you will learn practical techniques for managing database schema changes, version control, and automated deployments. Our exploration begins with foundational CI/CD capabilities for database migrations, ensuring your database changes are versioned, tested, and deployed consistently across all environments.
+
+You'll master enterprise-grade database DevOps practices using Flyway's powerful migration framework, applicable to SQL Server, PostgreSQL, MySQL, and other major database platforms. We conclude with advanced topics including rollback strategies, environment-specific deployments, and integrating database changes with your application delivery pipeline.
 
 ## Workshop Prerequisites
 
@@ -51,86 +80,55 @@ docker pull flyway/flyway:latest
 </plugin>
 ```
 
-### Database Connection
-
-For this workshop, you'll need access to a database instance. Contact your instructor for:
-
-- **Server Details**: Connection string and credentials
-- **Workshop Database**: Pre-configured schema for exercises
-- **Permissions**: DDL/DML rights for migration exercises
-
 ## Workshop Labs
 
-- [Lab 1: Getting Started with Flyway](training/flyway-autopilot/labs/lab1-getting-started/)
-- [Lab 2: Pipelines & Automation](training/flyway-autopilot/labs/lab2-pipelines-automation/)
-- [Lab 3: Advanced Deployments](training/flyway-autopilot/labs/lab3-deployments/)
-- [Lab 4: Version Control & Rollbacks](training/flyway-autopilot/labs/lab4-version-control/)
-- [Lab 5: Monitoring & Troubleshooting](training/flyway-autopilot/labs/lab5-monitoring/)
-- [Lab 6: Production Strategies](training/flyway-autopilot/labs/lab6-production/)
-
-### [Lab 1](training/flyway-autopilot/labs/lab1-getting-started/): Getting Started with Flyway
+### [Lab 1: Getting Started with Flyway](training/flyway-autopilot/labs/lab1-getting-started/)
 
 - 1.1: Install and configure Flyway for your environment
 - 1.2: Create your first migration scripts
 - 1.3: Execute migrations and understand versioning
 - 1.4: Explore Flyway's command-line interface
 
-### [Lab 2](training/flyway-autopilot/labs/lab2-pipelines-automation/): Pipelines & Automation
+### [Lab 2: Pipelines & Automation](training/flyway-autopilot/labs/lab2-pipelines-automation/)
 
 - 2.1: Set up automated migration pipelines
 - 2.2: Integrate Flyway with GitHub Actions
 - 2.3: Configure environment-specific deployments
 - 2.4: Implement migration validation and testing
 
-### [Lab 3](training/flyway-autopilot/labs/lab3-deployments/): Advanced Deployments
+### [Lab 3: Advanced Deployments](training/flyway-autopilot/labs/lab3-deployments/)
 
 - 3.1: Handle complex schema changes
 - 3.2: Manage data migrations safely
 - 3.3: Implement blue-green database deployments
 - 3.4: Configure environment promotion strategies
 
-### [Lab 4](training/flyway-autopilot/labs/lab4-version-control/): Version Control & Rollbacks
+### [Lab 4: Version Control & Rollbacks](training/flyway-autopilot/labs/lab4-version-control/)
 
 - 4.1: Advanced versioning strategies
 - 4.2: Implement safe rollback procedures
 - 4.3: Handle migration conflicts and repairs
 - 4.4: Baseline existing databases
 
-### [Lab 5](training/flyway-autopilot/labs/lab5-monitoring/): Monitoring & Troubleshooting
+### [Lab 5: Monitoring & Troubleshooting](training/flyway-autopilot/labs/lab5-monitoring/)
 
 - 5.1: Set up migration monitoring and alerting
 - 5.2: Debug failed migrations
 - 5.3: Performance optimization for large datasets
 - 5.4: Audit trail and compliance reporting
 
-### [Lab 6](training/flyway-autopilot/labs/lab6-production/): Production Strategies
+### [Lab 6: Production Strategies](training/flyway-autopilot/labs/lab6-production/)
 
 - 6.1: Zero-downtime deployment patterns
 - 6.2: Multi-environment coordination
 - 6.3: Security and access management
 - 6.4: Disaster recovery and backup strategies
 
-## Workshop Resources
-
-This training site provides step-by-step guidance through each lab with practical exercises and checkpoints to verify your progress. All workshop materials are available at [https://github.com/LetsMakeStuffGo/database-devops-autopilot](https://github.com/LetsMakeStuffGo/database-devops-autopilot), including complete solution files and reference implementations.
-
-The project is licensed under the MIT License, enabling you to use these materials in whole or part to improve your organization's database DevOps practices - see the [LICENSE](LICENSE.md) file for details.
-
-## Feedback and Contributions
-
-Have feedback about this workshop? We'd love to hear from you! Open an issue in our GitHub repository to share thoughts, suggestions, or report any problems you encounter. Pull requests are welcome if you'd like to contribute improvements to the workshop content.
-
 ## About the Authors
-
-### The LetsMakeStuffGo Team
 
 This workshop is brought to you by [LetsMakeStuffGo](https://www.makestuffgo.com), a company dedicated to bringing AI services to both Cloud and DevOps Engineering practices. Our mission is to help organizations implement world-class DevOps practices that deliver real business value.
 
 **Want to see how your company measures up?** Take our [FREE DevOps & FinOps Assessment](https://assessment.makestuffgo.com) to benchmark against industry standards.
-
-With 25+ years of combined experience in database management, DevOps automation, and enterprise software delivery, our team is passionate about education and helping others master practical skills that drive business outcomes.
-
-We're committed to sharing knowledge through workshops, user group presentations, and hands-on training that bridges the gap between theory and real-world implementation.
 
 ## Overview
 
