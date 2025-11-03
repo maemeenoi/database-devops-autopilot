@@ -1,13 +1,16 @@
 ---
-layout: lab
+layout: single
 title: "Lab 4: Version Control"
 description: "Advanced database version management and team collaboration strategies"
+toc: true
+toc_label: "Lab Steps"
+toc_icon: "tasks"
 prev_lab:
   title: "Lab 3: Deployments"
-  url: "/training/flyway-autopilot/labs/lab3-deployments"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab3-deployments"
 next_lab:
   title: "Lab 5: Monitoring and Rollback"
-  url: "/training/flyway-autopilot/labs/lab5-monitoring-and-rollback"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab5-monitoring-and-rollback"
 ---
 
 # Lab 4: Version Control

@@ -1,18 +1,17 @@
 ---
-layout: lab
+layout: single
 title: "Lab 3: Deployments"
-description: "Advanced deployment strategies and handling complex migration scenarios"
+description: "Learn advanced deployment strategies for complex database scenarios including blue-green deployments, canary releases, and handling large-scale migrations."
+toc: true
+toc_label: "Lab Steps"
+toc_icon: "tasks"
 prev_lab:
   title: "Lab 2: Pipelines and Automation"
-  url: "/training/flyway-autopilot/labs/lab2-pipelines-and-automation"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab2-pipelines-and-automation"
 next_lab:
   title: "Lab 4: Version Control"
-  url: "/training/flyway-autopilot/labs/lab4-version-control"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab4-version-control"
 ---
-
-# Lab 3: Deployments
-
-Learn advanced deployment strategies for complex database scenarios including blue-green deployments, canary releases, and handling large-scale migrations.
 
 ## Learning Objectives
 

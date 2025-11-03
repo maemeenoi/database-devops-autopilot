@@ -27,13 +27,9 @@ enable_copy_code_button: true
 # Minimal Mistakes Theme Settings
 minimal_mistakes_skin: "air" # Professional light theme - "default", "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
-# Logo for professional branding (add a logo file later)
-logo: "/assets/images/logo.png"
-
 # Site Author
 author:
   name: "LetsMakeStuffGo"
-  avatar: "/assets/images/avatar.jpg"
   bio: "Database DevOps Training Specialists"
   location: "New Zealand"
   links:
@@ -49,17 +45,6 @@ author:
 
 # Navigation
 masthead_title: "Database DevOps Autopilot"
-
-# Main navigation
-main:
-  - title: "Home"
-    url: /
-  - title: "Training"
-    url: /training/flyway-autopilot/
-  - title: "Documentation"
-    url: /docs/workshop-overview
-  - title: "Prerequisites"
-    url: /docs/prerequisites
 
 exclude:
   - Gemfile

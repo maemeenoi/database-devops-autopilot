@@ -1,18 +1,17 @@
 ---
-layout: lab
+layout: single
 title: "Lab 2: Pipelines and Automation"
-description: "Setting up CI/CD pipelines for automated database deployments"
+description: "In this lab, you'll learn how to integrate Flyway Autopilot with CI/CD pipelines to automate your database deployments."
+toc: true
+toc_label: "Lab Steps"
+toc_icon: "tasks"
 prev_lab:
   title: "Lab 1: Getting Started"
-  url: "/training/flyway-autopilot/labs/lab1-getting-started"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab1-getting-started"
 next_lab:
   title: "Lab 3: Deployments"
-  url: "/training/flyway-autopilot/labs/lab3-deployments"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab3-deployments"
 ---
-
-# Lab 2: Pipelines and Automation
-
-In this lab, you'll learn how to integrate Flyway Autopilot with CI/CD pipelines to automate your database deployments.
 
 ## Learning Objectives
 

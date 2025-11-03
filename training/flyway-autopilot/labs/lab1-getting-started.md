@@ -1,16 +1,11 @@
 ---
 layout: single
-title: "Lab 1: Getting Started"
+title: "Lab 1: Getting Started with Flyway Autopilot"
 description: "Introduction to Flyway Autopilot and setting up your development environment"
-toc: true
-toc_label: "Lab Steps"
-toc_icon: "tasks"
 next_lab:
   title: "Lab 2: Pipelines and Automation"
-  url: "/training/flyway-autopilot/labs/lab2-pipelines-and-automation"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab2-pipelines-and-automation"
 ---
-
-# Lab 1: Getting Started with Flyway Autopilot
 
 Welcome to your first lab! In this session, you'll set up your development environment and get familiar with the basics of Flyway Autopilot.
 

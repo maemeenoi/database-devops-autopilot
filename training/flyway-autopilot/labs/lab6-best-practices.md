@@ -1,10 +1,13 @@
 ---
-layout: lab
+layout: single
 title: "Lab 6: Best Practices"
 description: "Industry best practices and advanced techniques for enterprise database DevOps"
+toc: true
+toc_label: "Lab Steps"
+toc_icon: "tasks"
 prev_lab:
   title: "Lab 5: Monitoring and Rollback"
-  url: "/training/flyway-autopilot/labs/lab5-monitoring-and-rollback"
+  url: "/database-devops-autopilot/training/flyway-autopilot/labs/lab5-monitoring-and-rollback"
 ---
 
 # Lab 6: Best Practices

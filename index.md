@@ -72,6 +72,10 @@ This training is brought to you by [LetsMakeStuffGo](https://www.makestuffgo.com
 
 **Assess Your DevOps Maturity**: Take our [FREE DevOps & FinOps Assessment](https://assessment.makestuffgo.com) to see how your organization compares to industry standards.
 
+---
+
+## About This Training
+
 {% include feature_row %}
 
 ## Database DevOps Autopilot: Flyway Migration Training

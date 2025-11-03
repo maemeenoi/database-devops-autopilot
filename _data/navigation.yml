@@ -4,9 +4,9 @@ main:
   - title: "Training"
     url: /training/flyway-autopilot/
   - title: "Documentation"
-    url: /docs/workshop-overview/
+    url: /docs/workshop-overview
   - title: "Prerequisites"
-    url: /docs/prerequisites/
+    url: /docs/prerequisites
 
 # Sidebar navigation for training pages
 training_sidebar:
