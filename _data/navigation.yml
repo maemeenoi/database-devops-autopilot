@@ -8,6 +8,35 @@ main:
   - title: "Prerequisites"
     url: /docs/prerequisites/
 
+# Sidebar navigation for training pages
+training_sidebar:
+  - title: "Getting Started"
+    children:
+      - title: "Prerequisites"
+        url: /docs/prerequisites/
+      - title: "Workshop Overview"
+        url: /docs/workshop-overview/
+  - title: "Flyway Labs"
+    children:
+      - title: "Lab 1: Getting Started"
+        url: /training/flyway-autopilot/labs/lab1-getting-started/
+      - title: "Lab 2: Pipelines & Automation"
+        url: /training/flyway-autopilot/labs/lab2-pipelines-and-automation/
+      - title: "Lab 3: Advanced Deployments"
+        url: /training/flyway-autopilot/labs/lab3-deployments/
+      - title: "Lab 4: Version Control"
+        url: /training/flyway-autopilot/labs/lab4-version-control/
+      - title: "Lab 5: Monitoring & Rollback"
+        url: /training/flyway-autopilot/labs/lab5-monitoring-and-rollback/
+      - title: "Lab 6: Best Practices"
+        url: /training/flyway-autopilot/labs/lab6-best-practices/
+  - title: "Resources"
+    children:
+      - title: "References"
+        url: /docs/references/
+      - title: "Troubleshooting"
+        url: /docs/troubleshooting/
+
 training:
   - title: "Getting Started"
     url: /training/flyway-autopilot/labs/lab1-getting-started/

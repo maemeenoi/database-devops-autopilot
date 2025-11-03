@@ -1,7 +1,12 @@
 ---
-layout: lab
+layout: single
 title: "Lab 1: Getting Started"
 description: "Introduction to Flyway Autopilot and setting up your development environment"
+sidebar:
+  nav: "training_sidebar"
+toc: true
+toc_label: "Lab Steps"
+toc_icon: "tasks"
 next_lab:
   title: "Lab 2: Pipelines and Automation"
   url: "/training/flyway-autopilot/labs/lab2-pipelines-and-automation/"
