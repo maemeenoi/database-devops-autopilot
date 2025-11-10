@@ -104,28 +104,47 @@ else
   exit 1
 fi
 
-# Make sure /usr/local/bin exists (it should on macOS)
-sudo mkdir -p /usr/local/bin
-
-# Create symbolic link to the Flyway executable
-sudo ln -sf "$INSTALL_DIR/flyway" /usr/local/bin/flyway
-
 # Make sure the flyway binary is executable
 chmod +x "$INSTALL_DIR/flyway"
+
+# Make sure /usr/local/bin exists (it should on macOS)
+if [ ! -d "/usr/local/bin" ]; then
+  sudo mkdir -p /usr/local/bin
+fi
+
+# Create symbolic link to the Flyway executable
+# Try without sudo first, then with sudo if needed
+if ln -sf "$INSTALL_DIR/flyway" /usr/local/bin/flyway 2>/dev/null; then
+  echo "Created symlink without sudo"
+elif sudo ln -sf "$INSTALL_DIR/flyway" /usr/local/bin/flyway 2>/dev/null; then
+  echo "Created symlink with sudo"
+else
+  echo "Warning: Could not create symlink. Flyway will be available at: $INSTALL_DIR/flyway"
+  # Update PATH to include the install directory directly
+  export PATH="$INSTALL_DIR:$PATH"
+fi
 
 echo "Flyway version $FLYWAY_VERSION is downloaded and installed."
 
 echo "Updating PATH Variable for current session"
 export PATH="/usr/local/bin:$PATH"
 
-# Add to shell profile for persistent PATH
-SHELL_PROFILE=""
-if [ -n "$ZSH_VERSION" ]; then
+# Add to shell profiles for persistent PATH (detect shell type from environment)
+if [ "$SHELL" = "/bin/zsh" ] || [ "$SHELL" = "/usr/bin/zsh" ] || [ -n "$ZSH_VERSION" ]; then
   SHELL_PROFILE="$HOME/.zshrc"
-elif [ -n "$BASH_VERSION" ]; then
+elif [ "$SHELL" = "/bin/bash" ] || [ "$SHELL" = "/usr/bin/bash" ] || [ -n "$BASH_VERSION" ]; then
   if [ -f "$HOME/.bash_profile" ]; then
     SHELL_PROFILE="$HOME/.bash_profile"
   else
+    SHELL_PROFILE="$HOME/.bashrc"
+  fi
+else
+  # Fallback: try to detect based on existing files
+  if [ -f "$HOME/.zshrc" ]; then
+    SHELL_PROFILE="$HOME/.zshrc"
+  elif [ -f "$HOME/.bash_profile" ]; then
+    SHELL_PROFILE="$HOME/.bash_profile"
+  elif [ -f "$HOME/.bashrc" ]; then
     SHELL_PROFILE="$HOME/.bashrc"
   fi
 fi
@@ -137,14 +156,49 @@ if [ -n "$SHELL_PROFILE" ]; then
   fi
 fi
 
-# Validate Flyway installation
+# Validate Flyway installation with better error handling
 echo "Validating Flyway installation..."
-if flyway --version >/dev/null 2>&1; then
-  INSTALLED_VERSION=$(flyway --version | grep -o 'Flyway .* Edition [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*' | awk '{print $4}')
+
+# Check multiple possible locations for flyway
+FLYWAY_PATHS=("/usr/local/bin/flyway" "$INSTALL_DIR/flyway")
+FLYWAY_EXECUTABLE=""
+
+for path in "${FLYWAY_PATHS[@]}"; do
+  if [ -f "$path" ] && [ -x "$path" ]; then
+    FLYWAY_EXECUTABLE="$path"
+    break
+  fi
+done
+
+if [ -z "$FLYWAY_EXECUTABLE" ]; then
+  echo "Error: Flyway executable not found at any expected location"
+  echo "Checked locations:"
+  for path in "${FLYWAY_PATHS[@]}"; do
+    echo "  $path: $(ls -la "$path" 2>/dev/null || echo 'NOT FOUND')"
+  done
+  echo "Install directory contents:"
+  ls -la "$INSTALL_DIR" 2>/dev/null || echo "Install directory not found: $INSTALL_DIR"
+  exit 1
+fi
+
+# Try running flyway
+if "$FLYWAY_EXECUTABLE" --version >/dev/null 2>&1; then
+  INSTALLED_VERSION=$("$FLYWAY_EXECUTABLE" --version | grep -o 'Flyway .* Edition [0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*' | awk '{print $4}')
   echo "Flyway is successfully installed and running version $INSTALLED_VERSION."
+  echo "Flyway executable location: $FLYWAY_EXECUTABLE"
+  
+  # If flyway is not in /usr/local/bin, update PATH to include the install directory
+  if [ "$FLYWAY_EXECUTABLE" != "/usr/local/bin/flyway" ]; then
+    export PATH="$INSTALL_DIR:$PATH"
+    echo "Updated PATH to include: $INSTALL_DIR"
+  fi
 else
-  echo "Flyway installation failed. Please check for issues."
-  echo "You may need to restart your terminal or run 'source ~/.zshrc' (or ~/.bash_profile) to update your PATH."
+  echo "Flyway installation failed. Debugging information:"
+  echo "Flyway executable: $FLYWAY_EXECUTABLE"
+  echo "PATH: $PATH"
+  echo "Trying to run flyway:"
+  "$FLYWAY_EXECUTABLE" --version 2>&1 || echo "Failed to run flyway"
+  echo "You may need to restart your terminal or run 'source $SHELL_PROFILE' to update your PATH."
   exit 1
 fi
 
