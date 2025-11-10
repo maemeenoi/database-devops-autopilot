@@ -98,4 +98,5 @@ if flyway --version; then
   echo "Flyway is successfully installed and running version $(flyway --version | grep -Eo 'Flyway (Community|Pro|Enterprise|Teams) Edition [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $4}')."
 else
   echo "Flyway installation failed. Please check for issues."
+  exit 1  # Exit with failure status (non-zero) if Flyway isn't working
 fi

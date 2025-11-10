@@ -6,7 +6,6 @@ A comprehensive, hands-on training course for mastering **Flyway AutoPilot** - t
 
 ## Quick Start
 
-- **Duration**: 4–6 hours (6 progressive labs, 30–60 minutes each)
 - **Format**: Self-paced, hands-on labs with realistic business scenarios
 - **Prerequisites**: Basic SQL knowledge, Azure account, Git/GitHub familiarity
 - **Platform**: Azure SQL Database with Flyway AutoPilot

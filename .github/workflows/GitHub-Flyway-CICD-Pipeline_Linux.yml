@@ -67,7 +67,6 @@ jobs:
       stage: "Development"
       displayName: "Development"
       DATABASE_NAME: "db-autopilot-dev-001"
-      ENVIRONMENT: "development" # This variable refers to the environment name present in the Flyway Projects TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
       CUSTOM_PARAMS: "${{ secrets.CUSTOM_PARAMS }}" # Secure method of adding custom Flyway Parameters (Example -X for debug)
@@ -123,7 +122,6 @@ jobs:
     name: Deploy UAT
     # The type of runner that the job will run on
     runs-on: "self-hosted" # Options - self-hosted/ubuntu-latest/windows-latest (See here for more details on GitHub hosted runners - https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners)
-    environment: "uat" # This refers to GitHub's Environment name
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: build
     env:
