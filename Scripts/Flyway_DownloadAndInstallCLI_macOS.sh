@@ -37,8 +37,8 @@ get_latest_version_from_website() {
   content=$(curl -s https://documentation.red-gate.com/flyway/reference/usage/command-line)
 
   # Extract version number using BSD grep compatible approach
-  # Look for flyway-commandline-X.X.X-macos-x64.tar.gz pattern
-  latest_version=$(echo "$content" | grep -o 'flyway-commandline-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*-macos-x64\.tar\.gz' | sed 's/flyway-commandline-\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)-macos-x64\.tar\.gz/\1/' | head -n 1)
+  # Look for flyway-commandline-X.X.X-macosx-x64.tar.gz pattern first (more reliable)
+  latest_version=$(echo "$content" | grep -o 'flyway-commandline-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*-macosx-x64\.tar\.gz' | sed 's/flyway-commandline-\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)-macosx-x64\.tar\.gz/\1/' | head -n 1)
 
   # If macOS version not found, try to get version from Windows download and assume it's the same
   if [ -z "$latest_version" ]; then
@@ -124,12 +124,21 @@ echo "Java version check:"
 java -version
 
 # For macOS, try different download strategies:
-# 1. Try macOS-specific version
+# 1. Try macOS-specific version (detect architecture)
 # 2. Try no-JRE version (uses system Java)
 # 3. Fallback to Linux version only if others fail
 
+# Detect macOS architecture
+ARCH="x64"
+if [ "$(uname -m)" = "arm64" ]; then
+  ARCH="arm64"
+fi
+
+echo "Detected architecture: $ARCH"
+
 DOWNLOAD_URLS=(
-  "https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/$FLYWAY_VERSION/flyway-commandline-$FLYWAY_VERSION-macos-x64.tar.gz"
+  "https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/$FLYWAY_VERSION/flyway-commandline-$FLYWAY_VERSION-macosx-$ARCH.tar.gz"
+  "https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/$FLYWAY_VERSION/flyway-commandline-$FLYWAY_VERSION-macosx-x64.tar.gz"
   "https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/$FLYWAY_VERSION/flyway-commandline-$FLYWAY_VERSION-linux-x64-no-jre.tar.gz"
   "https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/$FLYWAY_VERSION/flyway-commandline-$FLYWAY_VERSION-linux-x64.tar.gz"
 )
@@ -139,16 +148,19 @@ DOWNLOAD_TYPE=""
 
 for i in "${!DOWNLOAD_URLS[@]}"; do
   url="${DOWNLOAD_URLS[$i]}"
-  echo "Checking availability of download option $((i+1))..."
+  echo "Checking availability of download option $((i+1)): $(basename "$url")"
   if curl --output /dev/null --silent --head --fail "$url"; then
     DOWNLOAD_URL="$url"
     case $i in
-      0) DOWNLOAD_TYPE="macOS-specific" ;;
-      1) DOWNLOAD_TYPE="no-JRE (uses system Java)" ;;
-      2) DOWNLOAD_TYPE="Linux with JRE" ;;
+      0) DOWNLOAD_TYPE="macOS-$ARCH specific" ;;
+      1) DOWNLOAD_TYPE="macOS-x64 fallback" ;;
+      2) DOWNLOAD_TYPE="no-JRE (uses system Java)" ;;
+      3) DOWNLOAD_TYPE="Linux with JRE" ;;
     esac
-    echo "Found available download: $DOWNLOAD_TYPE"
+    echo "✅ Found available download: $DOWNLOAD_TYPE"
     break
+  else
+    echo "❌ Not available: $(basename "$url")"
   fi
 done
 
@@ -175,7 +187,7 @@ else
   exit 1
 fi
 
-# If we downloaded Linux version with JRE, we need to handle the Java incompatibility
+# Only patch JRE if we downloaded the Linux version
 if [ "$DOWNLOAD_TYPE" = "Linux with JRE" ]; then
   echo "Downloaded Linux version with JRE. Checking Java compatibility..."
   
@@ -190,8 +202,8 @@ if [ "$DOWNLOAD_TYPE" = "Linux with JRE" ]; then
         # Backup original script
         cp "$INSTALL_DIR/flyway" "$INSTALL_DIR/flyway.original"
         
-        # Replace JRE path with system java
-        sed 's|JAVA_CMD="$INSTALLDIR/jre/bin/java"|JAVA_CMD="java"|g' "$INSTALL_DIR/flyway.original" > "$INSTALL_DIR/flyway"
+        # Replace the JRE detection logic to force system Java
+        sed 's/if \[ -x "\$INSTALLDIR\/jre\/bin\/java" \]; then/if false; then/' "$INSTALL_DIR/flyway.original" > "$INSTALL_DIR/flyway"
         chmod +x "$INSTALL_DIR/flyway"
         
         echo "Modified Flyway to use system Java instead of bundled JRE"
@@ -201,6 +213,8 @@ if [ "$DOWNLOAD_TYPE" = "Linux with JRE" ]; then
       exit 1
     fi
   fi
+else
+  echo "Using native macOS version - no JRE patching needed"
 fi
 
 # Make sure the flyway binary is executable
