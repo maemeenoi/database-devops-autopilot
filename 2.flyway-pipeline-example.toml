@@ -1,30 +1,28 @@
-
 # =============================================================================
 # Flyway Configuration for CI/CD PIPELINE (GitHub Actions)
 # =============================================================================
 # This file uses environment variable resolution with ${env.VARIABLE_NAME} syntax
 # Environment variables are securely provided through GitHub Secrets
-# 
-# FOR LOCAL DEVELOPMENT: Use flyway-local.toml instead
-# Copy flyway-local.toml to flyway-local-configured.toml and update with your values
-# Then use: flyway -configFiles=flyway-local-configured.toml [command]
+# This file is safe to commit as it contains no sensitive information
 # =============================================================================
 
-id = "database-devops-autopilot-training"
-name = "Database DevOps AutoPilot Training"
+id = "database-devops-autopilot-pipeline"
+name = "Database DevOps AutoPilot (CI/CD Pipeline)"
 databaseType = "SqlServer"
 
 [environments.development]
+# Environment variables resolved from GitHub Secrets during pipeline execution
 url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_DEV_DATABASE};encrypt=true;trustServerCertificate=false"
 user = "${env.AZURE_SQL_USER}"
 password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "Development database"
+displayName = "Development Database (CI/CD)"
 
 [environments.uat]
+# Environment variables resolved from GitHub Secrets during pipeline execution
 url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_UAT_DATABASE};encrypt=true;trustServerCertificate=false"
 user = "${env.AZURE_SQL_USER}"
 password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "UAT (User Acceptance Testing) database"
+displayName = "UAT Database (CI/CD)"
 
 [flyway]
 locations = [ "filesystem:migrations" ]
@@ -44,3 +42,13 @@ exclude = [ "ExampleSchema1", "ExampleSchema2" ]
 
 [flywayDesktop]
 developmentEnvironment = "development"
+
+# =============================================================================
+# REQUIRED GITHUB SECRETS (configured in repository settings):
+# =============================================================================
+# AZURE_SQL_SERVER          → Your Azure SQL Server name (without .database.windows.net)
+# AZURE_SQL_USER             → Your Azure SQL username
+# AZURE_SQL_PASSWORD         → Your Azure SQL password
+# FLYWAY_DEV_DATABASE        → Development database name
+# FLYWAY_UAT_DATABASE        → UAT database name
+# =============================================================================

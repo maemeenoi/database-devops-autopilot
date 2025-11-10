@@ -155,6 +155,7 @@ jobs:
       AZURE_SQL_SERVER: "${{ secrets.AZURE_SQL_SERVER }}"
       AZURE_SQL_USER: "${{ secrets.AZURE_SQL_USER }}"
       AZURE_SQL_PASSWORD: "${{ secrets.AZURE_SQL_PASSWORD }}"
+      FLYWAY_DEV_DATABASE: "${{ secrets.FLYWAY_DEV_DATABASE }}" # Required for Check Report comparison
       FLYWAY_UAT_DATABASE: "${{ secrets.FLYWAY_UAT_DATABASE }}"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

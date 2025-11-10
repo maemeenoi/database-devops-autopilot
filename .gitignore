@@ -8,6 +8,11 @@ _site/
 .bundle/
 vendor/
 
+# Flyway Local Configuration (contains sensitive credentials)
+flyway-local-configured.toml
+flyway-local-*.toml
+!flyway-local.toml  # Allow the template file
+
 # OS generated files
 .DS_Store
 .DS_Store?

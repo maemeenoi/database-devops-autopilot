@@ -1,0 +1,56 @@
+# =============================================================================
+# Flyway Configuration for LOCAL DEVELOPMENT (Flyway Desktop)
+# =============================================================================
+# This file contains hardcoded values for local testing with Flyway Desktop
+# Replace the placeholder values with your actual Azure SQL Database details
+# 
+# IMPORTANT: Do NOT commit this file with real credentials!
+# Add this file to .gitignore to prevent accidental commits
+# =============================================================================
+
+id = "database-devops-autopilot-local"
+name = "Database DevOps AutoPilot (Local Development)"
+databaseType = "SqlServer"
+
+[environments.development]
+# Replace with your actual Azure SQL Server details
+url = "jdbc:sqlserver://your-server-name.database.windows.net:1433;databaseName=your-dev-database-name;encrypt=true;trustServerCertificate=false"
+user = "your-sql-username"
+password = "your-sql-password"
+displayName = "Local Development Database"
+
+[environments.uat]
+# Replace with your actual Azure SQL Server details for UAT
+url = "jdbc:sqlserver://your-server-name.database.windows.net:1433;databaseName=your-uat-database-name;encrypt=true;trustServerCertificate=false"
+user = "your-sql-username"
+password = "your-sql-password"
+displayName = "Local UAT Database"
+
+[flyway]
+locations = [ "filesystem:migrations" ]
+mixed = true
+outOfOrder = true
+validateMigrationNaming = true
+defaultSchema = "Customers"
+baselineOnMigrate = true
+baselineVersion = "001"
+errorOverrides = [ "S0001:0:I-" ]
+
+[flyway.sqlserver.clean]
+mode = "all"
+
+[flyway.sqlserver.clean.schemas]
+exclude = [ "ExampleSchema1", "ExampleSchema2" ]
+
+[flywayDesktop]
+developmentEnvironment = "development"
+
+# =============================================================================
+# EXAMPLE VALUES TO REPLACE:
+# =============================================================================
+# your-server-name          → mycompany-sql-server
+# your-dev-database-name    → MyApp_Dev_DB
+# your-uat-database-name    → MyApp_UAT_DB
+# your-sql-username         → myuser@mycompany.com
+# your-sql-password         → MySecurePassword123!
+# =============================================================================
