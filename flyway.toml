@@ -4,15 +4,15 @@ name = "Database DevOps AutoPilot Training"
 databaseType = "SqlServer"
 
 [environments.development]
-url = "jdbc:sqlserver://${AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${FLYWAY_DEV_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${AZURE_SQL_USER}"
-password = "${AZURE_SQL_PASSWORD}"
+url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_DEV_DATABASE};encrypt=true;trustServerCertificate=false"
+user = "${env.AZURE_SQL_USER}"
+password = "${env.AZURE_SQL_PASSWORD}"
 displayName = "Development database"
 
 [environments.uat]
-url = "jdbc:sqlserver://${AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${FLYWAY_UAT_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${AZURE_SQL_USER}"
-password = "${AZURE_SQL_PASSWORD}"
+url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_UAT_DATABASE};encrypt=true;trustServerCertificate=false"
+user = "${env.AZURE_SQL_USER}"
+password = "${env.AZURE_SQL_PASSWORD}"
 displayName = "UAT (User Acceptance Testing) database"
 
 [flyway]
