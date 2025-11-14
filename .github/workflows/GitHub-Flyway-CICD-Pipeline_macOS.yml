@@ -208,11 +208,11 @@ jobs:
     runs-on: "macos-latest" # Using macOS GitHub-hosted runners
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: uat
-    environment: production # This requires manual approval - GitHub Environment setup required
+    environment: development # This requires manual approval - GitHub Environment setup required
     env:
       stage: "Production"
       DATABASE_NAME: "db-autopilot-prod-001"
-      ENVIRONMENT: "development" # Refers to the environment in the Flyway Project TOML file.
+      ENVIRONMENT: "prod" # Refers to the environment in the Flyway Project TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
       REPORT_ENVIRONMENT: "uat" # Use UAT as comparison base
