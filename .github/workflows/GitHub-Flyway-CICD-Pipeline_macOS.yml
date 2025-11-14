@@ -209,8 +209,7 @@ jobs:
     runs-on: self-hosted # Using self-hosted runners for production control
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: uat
-    # Remove environment temporarily - manual trigger approach instead
-    environment: development # This triggers approval requirement
+    # No environment specified - using manual terminal approval instead
     env:
       stage: "Production"
       DATABASE_NAME: "db-autopilot-prod-001"
@@ -254,6 +253,18 @@ jobs:
         run: |
           flyway auth -IAgreeToTheEula -email="${{ env.FLYWAY_EMAIL }}" -token="${{ env.FLYWAY_TOKEN }}"
 
+      # Step 1.5 - Environment Verification (for troubleshooting)
+      - name: Verify Environment Configuration
+        run: |
+          echo "🔍 Verifying Production Environment Configuration..."
+          echo "Environment: ${{ env.ENVIRONMENT }}"
+          echo "Database: ${{ env.DATABASE_NAME }}"
+          echo "Server: ${{ env.AZURE_SQL_SERVER }}"
+          echo "User: ${{ env.AZURE_SQL_USER }}"
+          echo "Password configured: ${{ env.AZURE_SQL_PASSWORD != '' }}"
+          echo "Prod DB configured: ${{ env.FLYWAY_PROD_DATABASE != '' }}"
+          echo ""
+
       # Step 2 - Create Check Report (Production vs UAT)
       - name: Create Production Check Reports
         if: ${{ env.generateReport == 'true' && success() }}
@@ -273,22 +284,40 @@ jobs:
       # Step 4 - MANUAL APPROVAL STEP: Deploy to Production
       - name: Manual Approval Required
         run: |
-          echo "⚠️  PRODUCTION DEPLOYMENT PAUSED"
-          echo "🔒 Manual approval required before proceeding"
-          echo "📧 Please check GitHub Actions and approve this deployment"
-          echo "🚨 This is your PRODUCTION environment - verify everything is ready!"
+          echo "=============================================="
+          echo "🚨 PRODUCTION DEPLOYMENT APPROVAL REQUIRED 🚨"
+          echo "=============================================="
           echo ""
-          echo "To proceed:"
-          echo "1. Review the UAT deployment results above"
-          echo "2. Verify wishlist feature works in UAT"
-          echo "3. Only continue if you're confident in the deployment"
+          echo "Environment: ${{ env.ENVIRONMENT }}"
+          echo "Database: ${{ env.DATABASE_NAME }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Triggered by: ${{ github.actor }}"
           echo ""
-          read -p "⚡ Type 'DEPLOY' to continue to production (or Ctrl+C to abort): " approval
-          if [ "$approval" != "DEPLOY" ]; then
-            echo "❌ Deployment cancelled - approval not received"
-            exit 1
-          fi
-          echo "✅ Approval received - proceeding to production..."
+          echo "⚠️  Check the reports artifact for migration details before proceeding."
+          echo ""
+          echo "🔥 WARNING: This will deploy database changes to PRODUCTION!"
+          echo ""
+          echo "To proceed with deployment, you must type exactly: YES"
+          echo "Any other input will cancel the deployment."
+          echo ""
+          # Use a more robust input method for terminal environments
+          while true; do
+              printf "Do you approve PRODUCTION deployment? (YES/no): "
+              read response
+              case "$response" in
+                  YES)
+                      echo "✅ Production deployment approved!"
+                      break
+                      ;;
+                  no|n|N|NO)
+                      echo "❌ Production deployment cancelled by user."
+                      exit 1
+                      ;;
+                  *)
+                      echo "Please type exactly 'YES' to approve or 'no' to cancel"
+                      ;;
+              esac
+          done
 
       - name: Migrate Production DB
         if: success()
