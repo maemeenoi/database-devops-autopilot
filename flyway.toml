@@ -19,6 +19,7 @@ url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databa
 user = "${env.AZURE_SQL_USER}"
 password = "${env.AZURE_SQL_PASSWORD}"
 displayName = "Development database"
+provisioner = "clean"
 
 [environments.shadow]
 url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_SHADOW_DATABASE};encrypt=true;trustServerCertificate=false"

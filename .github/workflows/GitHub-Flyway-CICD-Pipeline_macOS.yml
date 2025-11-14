@@ -185,6 +185,7 @@ jobs:
       - name: Create Check Reports
         if: ${{ env.generateReport == 'true' && success() }}
         run: |
+          mkdir -p reports
           flyway check -dryrun -changes -drift -environment="${{ env.ENVIRONMENT }}" -user=${{ env.TARGET_DATABASE_USERNAME }} -password=${{ env.TARGET_DATABASE_PASSWORD }} -configFiles="${{ github.workspace }}/flyway.toml" -locations="filesystem:${{ github.workspace }}/migrations" "-check.buildEnvironment=${{ env.REPORT_ENVIRONMENT }}" "-environments.${{ env.REPORT_ENVIRONMENT }}.user=${{ env.REPORT_DATABASE_USERNAME }}" "-environments.${{ env.REPORT_ENVIRONMENT }}.password=${{ env.REPORT_DATABASE_PASSWORD }}" "-reportFilename=${{ github.workspace }}/reports/${{ env.DATABASE_NAME }}-Run-${{ github.run_id }}-${{ env.ENVIRONMENT }}-Check-Report.html" "-publishResult=${{ env.FLYWAY_PUBLISH_RESULT }}" "-flywayServicePublish.publishReport=${{ env.FLYWAY_PUBLISH_RESULT }}" "-reportEnabled=${{ env.FLYWAY_PUBLISH_RESULT }}" ${{ env.CUSTOM_PARAMS }}
         continue-on-error: true
 
@@ -209,10 +210,11 @@ jobs:
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: uat
     # Remove environment temporarily - manual trigger approach instead
+    environment: development # This triggers approval requirement
     env:
       stage: "Production"
       DATABASE_NAME: "db-autopilot-prod-001"
-      ENVIRONMENT: "prod" # Refers to the environment in the Flyway Project TOML file.
+      ENVIRONMENT: "production" # Refers to the environment in the Flyway Project TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
       REPORT_ENVIRONMENT: "uat" # Use UAT as comparison base
@@ -256,6 +258,7 @@ jobs:
       - name: Create Production Check Reports
         if: ${{ env.generateReport == 'true' && success() }}
         run: |
+          mkdir -p reports
           flyway check -dryrun -changes -drift -environment="${{ env.ENVIRONMENT }}" -user=${{ env.TARGET_DATABASE_USERNAME }} -password=${{ env.TARGET_DATABASE_PASSWORD }} -configFiles="${{ github.workspace }}/flyway.toml" -locations="filesystem:${{ github.workspace }}/migrations" "-check.buildEnvironment=${{ env.REPORT_ENVIRONMENT }}" "-environments.${{ env.REPORT_ENVIRONMENT }}.user=${{ env.REPORT_DATABASE_USERNAME }}" "-environments.${{ env.REPORT_ENVIRONMENT }}.password=${{ env.REPORT_DATABASE_PASSWORD }}" "-reportFilename=${{ github.workspace }}/reports/${{ env.DATABASE_NAME }}-Run-${{ github.run_id }}-${{ env.ENVIRONMENT }}-Check-Report.html" "-publishResult=${{ env.FLYWAY_PUBLISH_RESULT }}" "-flywayServicePublish.publishReport=${{ env.FLYWAY_PUBLISH_RESULT }}" "-reportEnabled=${{ env.FLYWAY_PUBLISH_RESULT }}" ${{ env.CUSTOM_PARAMS }}
         continue-on-error: true
 

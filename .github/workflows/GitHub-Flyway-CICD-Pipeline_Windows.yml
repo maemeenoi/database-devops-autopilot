@@ -175,3 +175,96 @@ jobs:
         shell: cmd
         run: |
           flyway info migrate info -environment="${{ env.ENVIRONMENT }}" -user="${{ env.TARGET_DATABASE_USERNAME }}" -password="${{ env.TARGET_DATABASE_PASSWORD }}" -baselineOnMigrate=true -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" ${{ env.CUSTOM_PARAMS }}
+
+  production:
+    name: Deploy Production
+    # The type of runner that the job will run on
+    runs-on: "self-hosted" # Production requires self-hosted runner for interactive approval
+    if: ${{ true }} #Set this variable to false to temporarily disable the job
+    needs: uat
+    env:
+      stage: "Production"
+      DATABASE_NAME: "db-autopilot-prod-001"
+      ENVIRONMENT: "production" # Refers to the environment in the Flyway Project TOML file.
+      TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
+      TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
+      REPORT_ENVIRONMENT: "uat" # Use UAT as comparison base for production
+      REPORT_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}" # Optional - Change to a different secret if the connection details for the report database differs from the target
+      REPORT_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}" # Optional - Change to a different secret if the connection details for the report database differs from the target
+      CUSTOM_PARAMS: "${{ secrets.CUSTOM_PARAMS }}" # Secure method of adding custom Flyway Parameters (Example -X for debug)
+      generateReport: "true" # Turn to false to skip the CHECK report stage tasks
+      FLYWAY_CHECK_DRIFT_ON_MIGRATE: "true" # Turn to false to skip the Drift Report upload to Flyway Pipelines (If enabled)
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/download-artifact@v4
+        with:
+          name: flyway-build-artifact-${{ github.run_number }}
+      # Optional - List out all build artifact files on disk, helpful for debugging
+      - name: Display structure of downloaded files
+        shell: cmd
+        run: dir /s
+      # Optional - If Enabled, Flyway CLI will be validated and installed if not present
+      - name: Flyway - CLI Automatic Validation and Install
+        run: |
+          Set-Location "${{ GITHUB.WORKSPACE }}"
+          powershell -ExecutionPolicy Bypass -File ".\Scripts\Flyway_DownloadAndInstallCLI.ps1"
+        if: env.FLYWAY_CLI_INSTALL_CHECK == 'true'
+      # Step 1 - Flyway License Authentication #
+      - name: Flyway Authentication
+        if: ${{ success() && env.FLYWAY_AUTH_DISABLED != 'true' }}
+        shell: cmd
+        run: |
+          flyway auth -IAgreeToTheEula -email="${{ env.FLYWAY_EMAIL }}" -token="${{ env.FLYWAY_TOKEN }}"
+      # Step 2 - Create Check Report for Production (Preview Only)
+      - name: Create Production Check Reports (Preview)
+        if: ${{ env.generateReport == 'true' && success() }}
+        shell: cmd
+        run: |
+          if not exist "reports" mkdir reports
+          flyway check -dryrun -changes -drift -environment="${{ env.ENVIRONMENT }}" -user="${{ env.TARGET_DATABASE_USERNAME }}" -password="${{ env.TARGET_DATABASE_PASSWORD }}" -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" -check.buildEnvironment="${{ env.REPORT_ENVIRONMENT }}" -environments.${{ env.REPORT_ENVIRONMENT }}.user="${{ env.REPORT_DATABASE_USERNAME }}" -environments.${{ env.REPORT_ENVIRONMENT }}.password="${{ env.REPORT_DATABASE_PASSWORD }}" -reportFilename="${{ GITHUB.WORKSPACE }}/reports/${{ env.DATABASE_NAME }}-Run-${{ GITHUB.RUN_ID }}-${{ env.ENVIRONMENT }}-Check-Report.html" ${{ env.CUSTOM_PARAMS }}
+        continue-on-error: true
+      # Step 3 - Publish Check Report
+      - name: Publish Production Check Report as Artifact
+        if: ${{ env.generateReport == 'true' && success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: flyway-reports-production
+          path: ${{ GITHUB.WORKSPACE }}/reports/${{ env.DATABASE_NAME }}-Run-${{ GITHUB.RUN_ID }}-${{ env.ENVIRONMENT }}-Check-Report.html
+      # Step 4 - Interactive Approval for Production Deployment
+      - name: Production Deployment Approval
+        shell: powershell
+        run: |
+          Write-Host "==============================================" -ForegroundColor Yellow
+          Write-Host "PRODUCTION DEPLOYMENT APPROVAL REQUIRED" -ForegroundColor Red
+          Write-Host "==============================================" -ForegroundColor Yellow
+          Write-Host ""
+          Write-Host "Environment: ${{ env.ENVIRONMENT }}" -ForegroundColor Cyan
+          Write-Host "Database: ${{ env.DATABASE_NAME }}" -ForegroundColor Cyan
+          Write-Host "Run ID: ${{ github.run_id }}" -ForegroundColor Cyan
+          Write-Host "Triggered by: ${{ github.actor }}" -ForegroundColor Cyan
+          Write-Host ""
+          Write-Host "Check the reports artifact for migration details before proceeding." -ForegroundColor Yellow
+          Write-Host ""
+          Write-Host "WARNING: This will deploy database changes to PRODUCTION!" -ForegroundColor Red
+          Write-Host ""
+          do {
+              $response = Read-Host "Do you want to proceed with PRODUCTION deployment? (yes/no)"
+              $response = $response.ToLower().Trim()
+              if ($response -eq "yes" -or $response -eq "y") {
+                  Write-Host "✅ Production deployment approved!" -ForegroundColor Green
+                  break
+              } elseif ($response -eq "no" -or $response -eq "n") {
+                  Write-Host "❌ Production deployment cancelled by user." -ForegroundColor Red
+                  exit 1
+              } else {
+                  Write-Host "Please enter 'yes' or 'no'" -ForegroundColor Yellow
+              }
+          } while ($true)
+      # Step 5 - Deploy pending migrations to production database
+      - name: Migrate Production DB
+        if: success()
+        shell: cmd
+        run: |
+          echo Deploying to Production Database: ${{ env.DATABASE_NAME }}
+          flyway info migrate info -environment="${{ env.ENVIRONMENT }}" -user="${{ env.TARGET_DATABASE_USERNAME }}" -password="${{ env.TARGET_DATABASE_PASSWORD }}" -baselineOnMigrate=true -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" ${{ env.CUSTOM_PARAMS }}
