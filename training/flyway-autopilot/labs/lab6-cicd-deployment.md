@@ -396,7 +396,6 @@ WHERE TABLE_NAME = 'CustomerWishlistAnalytics'
 
 -- Check migration history
 SELECT * FROM flyway_schema_history
-WHERE version = '5' AND description LIKE '%Wishlist%'
 ```
 
 ### 3. Test Wishlist Functionality in UAT

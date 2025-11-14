@@ -209,7 +209,7 @@ jobs:
     runs-on: self-hosted # Using self-hosted runners for production control
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: uat
-    # No environment specified - using manual terminal approval instead
+    environment: "development" # Required for accessing secrets/credentials
     env:
       stage: "Production"
       DATABASE_NAME: "db-autopilot-prod-001"
