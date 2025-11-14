@@ -314,9 +314,9 @@ You now understand how to generate production-ready migration scripts from schem
 
 **In Lab 6**, you'll learn how to:
 
-- **Deploy migration scripts** to your UAT environment using Flyway CLI
-- **Configure automated CI/CD pipelines** with GitHub Actions
-- **Set up database deployment workflows** for releases
+- **Deploy migration scripts** to your UAT and Production environments using Flyway CLI
+- **Configure automated CI/CD pipelines** with GitHub Actions for safe production deployments
+- **Set up database deployment workflows** with UAT validation before production releases
 
 **You are becoming proficient in database DevOps with Flyway AutoPilot.**
 

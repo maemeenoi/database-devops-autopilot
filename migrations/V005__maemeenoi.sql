@@ -2,29 +2,65 @@ SET NUMERIC_ROUNDABORT OFF
 GO
 SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
 GO
-PRINT N'Dropping constraints from [Operation].[InventoryAudit]'
+PRINT N'Dropping constraints from [Operation].[InventoryAudit] - Safe approach'
 GO
-ALTER TABLE [Operation].[InventoryAudit] DROP CONSTRAINT [DF__Inventory__Chang__151B244E]
+-- Drop constraint only if it exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[InventoryAudit]') AND name LIKE 'DF__Inventory__Chang%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[InventoryAudit]') AND name LIKE 'DF__Inventory__Chang%'
+    EXEC('ALTER TABLE [Operation].[InventoryAudit] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
-PRINT N'Dropping constraints from [Operation].[ProductReviews]'
+PRINT N'Dropping constraints from [Operation].[ProductReviews] - Safe approach'
 GO
-ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__Revie__0E6E26BF]
+-- Drop ReviewDate constraint if exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[ProductReviews]') AND name LIKE 'DF__ProductRe__Revie%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[ProductReviews]') AND name LIKE 'DF__ProductRe__Revie%'
+    EXEC('ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
-PRINT N'Dropping constraints from [Operation].[ProductReviews]'
+-- Drop IsVerified constraint if exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[ProductReviews]') AND name LIKE 'DF__ProductRe__IsVer%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Operation].[ProductReviews]') AND name LIKE 'DF__ProductRe__IsVer%'
+    EXEC('ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
-ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__IsVer__0F624AF8]
+PRINT N'Dropping constraints from [Sales].[CustomerLoyalty] - Safe approach'
 GO
-PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
+-- Drop TotalPoints constraint if exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__Total%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__Total%'
+    EXEC('ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Total__08B54D69]
+-- Drop LoyaltyLevel constraint if exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__Loyal%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__Loyal%'
+    EXEC('ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
-PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
-GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Loyal__09A971A2]
-GO
-PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
-GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__JoinD__0A9D95DB]
+-- Drop JoinDate constraint if exists
+IF EXISTS(SELECT * FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__JoinD%')
+BEGIN
+    DECLARE @ConstraintName NVARCHAR(200)
+    SELECT @ConstraintName = name FROM sys.default_constraints WHERE parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]') AND name LIKE 'DF__CustomerL__JoinD%'
+    EXEC('ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [' + @ConstraintName + ']')
+    PRINT 'Dropped constraint: ' + @ConstraintName
+END
 GO
 PRINT N'Creating [Sales].[CustomerWishlists]'
 GO

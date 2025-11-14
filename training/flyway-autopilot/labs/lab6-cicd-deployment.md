@@ -168,7 +168,7 @@ Value: -X (Optional - enables debug mode)
 
 ### 3. Environment Flow in CI/CD
 
-Your pipeline will deploy through these environments:
+Your pipeline will deploy through these environments in sequence:
 
 ```
 Development (dev) ← Source Control
@@ -176,14 +176,35 @@ Development (dev) ← Source Control
 Shadow Database (validation) ← Clean deployment test
          ↓
 UAT (uat) ← User Acceptance Testing
-         ↓
-Production (prod) ← Manual approval required
+         ↓ (Manual Approval Required)
+Production (prod) ← Live Production Database
 ```
+
+**Deployment Strategy:**
 
 - **Development**: Where developers make changes
 - **Shadow**: Clean database for validation testing
-- **UAT**: User acceptance testing environment
-- **Production**: Live production database (with approval gates)
+- **UAT**: User acceptance testing environment (automated deployment)
+- **Production**: Live production database (**manual approval required**)
+
+**Production Deployment Options:**
+
+1. **Same Workflow with Approval Gates** (Recommended):
+
+   - Use environments in GitHub with protection rules
+   - Require manual approval before production deployment
+   - Single workflow handles both UAT and Production
+
+2. **Separate Production Workflow**:
+
+   - Create dedicated `production-deployment.yml` workflow
+   - Triggered manually after UAT validation
+   - Allows different approval processes and timing
+
+3. **Tag-Based Production Deployment**:
+   - UAT deployment from `main` branch
+   - Production deployment only when creating release tags
+   - Provides clear production release versioning
 
 ## Step 5: Editing the Workflow Files
 
@@ -193,6 +214,7 @@ Production (prod) ← Manual approval required
 2. **Select the YAML file** matching your self-hosted runner OS:
    - Windows: `GitHub-Flyway-CICD-Pipeline_Windows.yml`
    - Linux: `GitHub-Flyway-CICD-Pipeline_Linux.yml`
+   - MacOS: `GitHub-Flyway-CICD-Pipeline_macOS.yml`
 
 ### 2. Review Workflow Configuration
 
@@ -209,17 +231,70 @@ The workflows are pre-configured to:
 - name: Authenticate Flyway
   run: flyway auth -email ${{ secrets.FLYWAY_EMAIL }} -token ${{ secrets.FLYWAY_TOKEN }}
 
-# Migrates database using project configuration
+# Deploy to UAT automatically
 - name: Deploy to UAT
   run: flyway migrate -environment=uat
+
+# Deploy to Production with manual approval
+- name: Deploy to Production
+  run: flyway migrate -environment=prod
+  environment: production # Requires GitHub environment with approval rules
 ```
+
+**Production Deployment Best Practices:**
+
+1. **GitHub Environments**: Set up a "production" environment in GitHub Settings
+2. **Approval Rules**: Require manual approval from designated reviewers
+3. **Protection Rules**: Limit who can approve production deployments
+4. **Deployment Windows**: Optionally restrict deployment times (e.g., business hours only)
 
 ### 3. Verify Environment Configuration
 
-1. **In Flyway Desktop, go to "Migration Scripts" tab**
-2. **Click "Manage target databases"**
-3. **Verify UAT environment** is properly configured
-4. **Test connection** to ensure database accessibility
+1. **In Flyway Desktop, go to the "Environments" tab** in the left navigation
+2. **Review your 4-environment setup**:
+   - Development Database (`db-autopilot-dev-001`)
+   - Shadow Database (`db-autopilot-shadow-001`)
+   - UAT Database (`db-autopilot-uat-001`)
+   - Production Database (`db-autopilot-prod-001`)
+3. **Verify each environment connection** is properly configured
+4. **Test connections** to ensure database accessibility for CI/CD deployment
+
+## Step 5.5: Setting Up Production Approval Gates (Recommended)
+
+Before running workflows, let's set up GitHub Environments with approval gates for safe production deployments:
+
+### 1. Create GitHub Environment
+
+1. **In your GitHub repository, go to Settings**
+2. **Click "Environments"** in the left sidebar
+3. **Click "New environment"** button
+4. **Enter environment name**: `production`
+5. **Click "Configure environment"**
+
+### 2. Configure Protection Rules
+
+**Environment Protection Rules:**
+
+1. **Check "Required reviewers"**
+2. **Add yourself** (and team members) as required reviewers
+3. **Set "Number of required reviewers"** to at least 1
+4. **Optionally check "Prevent self-review"** for additional safety
+5. **Click "Save protection rules"**
+
+### 3. Optional: Deployment Branch Protection
+
+1. **Under "Deployment branches"** select "Protected branches only"
+2. **This ensures only main/master branch** can deploy to production
+3. **Prevents accidental production deployment** from feature branches
+
+### 4. Verify Environment Setup
+
+1. **Return to your repository's main page**
+2. **Go to "Actions" tab**
+3. **Your production environment** should now appear in environment list
+4. **Production deployments will now require approval** before execution
+
+**This setup ensures that UAT deploys automatically, but production requires manual approval - perfect for database safety!**
 
 ## Step 6: Running the Workflow
 
@@ -232,20 +307,52 @@ The workflows are pre-configured to:
 
 ![Trigger Workflow](../../../assets/images/labs/lab6-cicd_5.png)
 
-### 2. Monitor the Workflow
+### 2. Monitor UAT Deployment
 
 1. **Click on the workflow run** to monitor progress
 2. **Watch for "Queued" status** (normal if runner is busy)
-3. **Verify runner is active** and available to execute
+3. **UAT deployment will run automatically** without approval
+4. **Wait for UAT deployment to complete** successfully
 
 ![Workflow Queued](../../../assets/images/labs/lab6-cicd_6.png)
+
+### 3. Production Approval Process
+
+After UAT deployment succeeds:
+
+1. **Production deployment will pause** and wait for approval
+2. **You'll see "Waiting for approval" status** in the workflow
+3. **Check your email** for approval notification from GitHub
+4. **Click "Review deployments"** button when ready for production
+5. **Select "production" environment** and click "Approve and deploy"
+
+**Expected Approval Flow:**
+
+```
+✅ UAT Deployment: Complete
+⏳ Production Deployment: Waiting for approval
+👥 Required Reviewers: [Your Name]
+🔒 Protection: Manual approval required
+```
 
 ### 3. View Deployment Progress
 
 1. **Click on "Deploy Build"** job to see detailed logs
-2. **Monitor Flyway commands** being executed:
+2. **Monitor Flyway commands** being executed
+3. **Watch UAT deployment complete** first
+4. **Production deployment starts after approval**
 
 ![Workflow Running](../../../assets/images/labs/lab6-cicd_7.png)
+
+**Deployment Flow:**
+
+```
+1. 🔄 Authenticate with Flyway
+2. ✅ Deploy to UAT (automatic)
+3. ⏸️  Wait for production approval
+4. 👥 Manual approval required
+5. ✅ Deploy to Production (after approval)
+```
 
 ## Step 7: Post-Deployment Verification
 
@@ -262,8 +369,12 @@ After successful completion:
 ```
 ✅ Authentication successful
 ✅ Connected to db-autopilot-uat-001
-✅ Database schema updated successfully
-✅ No drift detected
+✅ UAT Database schema updated successfully
+⏳ Waiting for production approval...
+✅ Production approval granted by [approver-name]
+✅ Connected to db-autopilot-prod-001
+✅ Production database schema updated successfully
+✅ No drift detected in any environment
 ```
 
 ![Deployment Success](../../../assets/images/labs/lab6-deployment-success.png)
