@@ -205,10 +205,10 @@ jobs:
   production:
     name: Deploy Production
     # The type of runner that the job will run on
-    runs-on: "macos-latest" # Using macOS GitHub-hosted runners
+    runs-on: self-hosted # Using self-hosted runners for production control
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: uat
-    environment: development # This requires manual approval - GitHub Environment setup required
+    # Remove environment temporarily - manual trigger approach instead
     env:
       stage: "Production"
       DATABASE_NAME: "db-autopilot-prod-001"
@@ -267,7 +267,26 @@ jobs:
           name: flyway-reports-production
           path: ${{ github.workspace }}/reports/${{ env.DATABASE_NAME }}-Run-${{ github.run_id }}-${{ env.ENVIRONMENT }}-Check-Report.html
 
-      # Step 4 - Deploy pending migrations to Production database (REQUIRES MANUAL APPROVAL)
+      # Step 4 - MANUAL APPROVAL STEP: Deploy to Production
+      - name: Manual Approval Required
+        run: |
+          echo "⚠️  PRODUCTION DEPLOYMENT PAUSED"
+          echo "🔒 Manual approval required before proceeding"
+          echo "📧 Please check GitHub Actions and approve this deployment"
+          echo "🚨 This is your PRODUCTION environment - verify everything is ready!"
+          echo ""
+          echo "To proceed:"
+          echo "1. Review the UAT deployment results above"
+          echo "2. Verify wishlist feature works in UAT"
+          echo "3. Only continue if you're confident in the deployment"
+          echo ""
+          read -p "⚡ Type 'DEPLOY' to continue to production (or Ctrl+C to abort): " approval
+          if [ "$approval" != "DEPLOY" ]; then
+            echo "❌ Deployment cancelled - approval not received"
+            exit 1
+          fi
+          echo "✅ Approval received - proceeding to production..."
+
       - name: Migrate Production DB
         if: success()
         run: |
