@@ -169,6 +169,7 @@ undoScripts = true
 ```
 
 **✅ Use this configuration for:**
+
 - **Flyway Desktop** development and testing
 - **Local command line** Flyway operations
 - **Training exercises** and hands-on labs
@@ -229,6 +230,7 @@ undoScripts = true
 ```
 
 **🚀 Use this configuration for:**
+
 - **GitHub Actions** workflows
 - **Azure DevOps** pipelines
 - **Production deployments**
@@ -237,14 +239,14 @@ undoScripts = true
 
 ### 2. Configuration Comparison
 
-| Feature | Local Development (`1.flyway-local.toml`) | CI/CD Pipeline (`flyway.toml`) |
-|---------|-------------------------------------------|--------------------------------|
-| **Primary Use** | Flyway Desktop & Local Development | GitHub Actions & Azure DevOps |
-| **Credentials** | Hardcoded (training convenience) | Environment Variables (secure) |
-| **Environments** | 3 (dev, shadow, uat) | 4 (dev, shadow, uat, production) |
-| **Security** | ⚠️ Training only | ✅ Production ready |
-| **Team Sharing** | ❌ Contains passwords | ✅ Uses secrets |
-| **Best For** | Learning & Development | Production Deployment |
+| Feature          | Local Development (`1.flyway-local.toml`) | CI/CD Pipeline (`flyway.toml`)   |
+| ---------------- | ----------------------------------------- | -------------------------------- |
+| **Primary Use**  | Flyway Desktop & Local Development        | GitHub Actions & Azure DevOps    |
+| **Credentials**  | Hardcoded (training convenience)          | Environment Variables (secure)   |
+| **Environments** | 3 (dev, shadow, uat)                      | 4 (dev, shadow, uat, production) |
+| **Security**     | ⚠️ Training only                          | ✅ Production ready              |
+| **Team Sharing** | ❌ Contains passwords                     | ✅ Uses secrets                  |
+| **Best For**     | Learning & Development                    | Production Deployment            |
 
 > **For this training**, we'll use `1.flyway-local.toml` with Flyway Desktop for hands-on learning, then explore `flyway.toml` to understand production patterns.
 
@@ -505,13 +507,14 @@ flyway -configFiles=1.flyway-local.toml info
 
 The repository includes multiple Flyway configurations for different scenarios:
 
-| File | Purpose | Usage |
-|------|---------|-------|
-| `flyway.toml` | CI/CD pipelines | Uses environment variables for secure deployment |
-| `1.flyway-local.toml` | Local development | Hardcoded credentials for training convenience |
-| `2.flyway-pipeline.toml` | Pipeline-specific | Alternative pipeline configuration |
+| File                     | Purpose           | Usage                                            |
+| ------------------------ | ----------------- | ------------------------------------------------ |
+| `flyway.toml`            | CI/CD pipelines   | Uses environment variables for secure deployment |
+| `1.flyway-local.toml`    | Local development | Hardcoded credentials for training convenience   |
+| `2.flyway-pipeline.toml` | Pipeline-specific | Alternative pipeline configuration               |
 
 **For this training**, we'll primarily use:
+
 - **`1.flyway-local.toml`** for quick local development and testing
 - **`flyway.toml`** to understand production-ready environment variable patterns
 
@@ -529,23 +532,27 @@ This lab uses the official Database DevOps AutoPilot training repository:
 The cloned repository follows industry best practices:
 
 **📁 Core Flyway Files:**
+
 - `flyway.toml` - Production configuration with environment variables
 - `migrations/` - All database migration scripts in chronological order
 - `schema-model/` - Schema model for change detection and collaboration
 
 **🔧 Development Tools:**
-- `1.flyway-local.toml` - Local development with training credentials  
+
+- `1.flyway-local.toml` - Local development with training credentials
 - `Scripts/` - Database setup and utility scripts
 - `Reports/` - Migration execution reports and validation
 
 **🚀 CI/CD Integration:**
+
 - `.github/workflows/` - GitHub Actions pipeline templates
 - `AzureDevOps/` - Azure DevOps pipeline YAML files
 - Environment variable patterns for secure deployment
 
 This structure enables:
+
 - **Team collaboration** through schema model version control
-- **Multi-environment deployment** with secure credential management  
+- **Multi-environment deployment** with secure credential management
 - **Automated testing** and validation through CI/CD pipelines
 - **Production-ready patterns** following Redgate best practices
 
