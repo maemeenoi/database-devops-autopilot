@@ -65,7 +65,7 @@ By comparing the schema model against these existing scripts, Flyway can determi
 2. **Navigate to the "Generate migrations" tab** (in the left navigation)
 3. **Click "Refresh"** to analyze your current changes
 
-![Migration Generation](../../../assets/images/labs/lab4-shadowdb.png)
+![Migration Generation](../../../assets/images/labs/lab5-shadowdb.png)
 
 You should see the same changes that were detected in Lab 4, now ready for migration script generation:
 
