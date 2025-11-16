@@ -83,7 +83,6 @@ Since you completed all migrations in Lab 3, Flyway Desktop should show **'No ch
 - All your tables (Customers, Products, Orders, CustomerLoyalty, ProductReviews) are in the schema model
 - Views (CustomerOrdersSummary, ProductInventoryStatus, ProductRatingSummary) are captured
 - Stored procedures (AddCustomerFeedback, UpdateProductStock) are tracked
-- **No wishlist tables should be present** in either database or schema model
 
 ### 2. Explore Your Current E-Commerce Schema
 
@@ -97,6 +96,8 @@ Take a moment to explore what AutoPilot has captured:
 - **Stored Procedures**: Customer feedback and inventory management
 
 **Important Note**: If you see any wishlist-related tables (CustomerWishlists, WishlistItems) in your schema model but NOT in your database, this creates a schema drift scenario where AutoPilot will want to DROP those tables. For this lab, we want to start clean and CREATE new tables, so make sure you've removed any wishlist artifacts from the schema-model/ folder as instructed in Step 1.
+
+![Modified](../../../assets/images/labs/lab4-modified.png)
 
 **⚠️ Don't Panic About "Modified" Status**: You might also see some legitimate tables like CustomerLoyalty, ProductReviews, or InventoryAudit showing as "modified" in Flyway Desktop. This is normal! These are important tables from your e-commerce platform that should NOT be deleted. The "modified" status usually indicates minor schema formatting differences. Simply check all these legitimate changes and click "Save" to sync them - do NOT delete these files from your schema-model folder.
 
@@ -120,7 +121,21 @@ Now let's enhance our e-commerce platform by adding new functionality. We'll add
 
 ### 2. Add a Product Wishlist Feature
 
-Let's add tables to support a customer wishlist system. Execute this SQL in your database:
+**⚠️ IMPORTANT: Ensure you're connected to the correct database!**
+
+Before running any SQL scripts, verify you're connected to your **development database**:
+
+**Using VS Code:**
+
+- Check the bottom status bar shows: `sqlbits.database.windows.net (db-autopilot-dev-001)`
+- If not, use Command Palette → "MS SQL: Connect" and select `db-autopilot-dev-001`
+
+**Using SSMS:**
+
+- Check the Object Explorer shows you're connected to `db-autopilot-dev-001`
+- If not, right-click server → "New Query" → select `db-autopilot-dev-001` from dropdown
+
+Let's add tables to support a customer wishlist system. Execute this SQL in your **development** database:
 
 ```sql
 -- Create Customer Wishlist table for our e-commerce platform
@@ -297,9 +312,6 @@ In the changes list, you should now see your wishlist changes detected:
 
 **Expected Changes:**
 
-- **InventoryAudit** - 🔧 Modify (Table, Operation schema)
-- **ProductReviews** - 🔧 Modify (Table, Operation schema)
-- **CustomerLoyalty** - 🔧 Modify (Table, Sales schema)
 - **CustomerWishlists** - ➕ Create (Table, Sales schema)
 - **WishlistItems** - ➕ Create (Table, Sales schema)
 - **CustomerWishlistAnalytics** - ➕ Create (View, Sales schema)
