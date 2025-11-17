@@ -102,20 +102,26 @@ ALTER TABLE [Sales].[CustomerWishlists] ADD CONSTRAINT [FK_CustomerWishlists_Cus
 GO
 PRINT N'Adding constraints to [Operation].[InventoryAudit]'
 GO
-ALTER TABLE [Operation].[InventoryAudit] ADD CONSTRAINT [DF__Inventory__Chang__151B244E] DEFAULT (getdate()) FOR [ChangeDate]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__Inventory__Chang__151B244E' AND parent_object_id = OBJECT_ID('[Operation].[InventoryAudit]'))
+    ALTER TABLE [Operation].[InventoryAudit] ADD CONSTRAINT [DF__Inventory__Chang__151B244E] DEFAULT (getdate()) FOR [ChangeDate]
 GO
 PRINT N'Adding constraints to [Operation].[ProductReviews]'
 GO
-ALTER TABLE [Operation].[ProductReviews] ADD CONSTRAINT [DF__ProductRe__Revie__0E6E26BF] DEFAULT (getdate()) FOR [ReviewDate]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__ProductRe__Revie__0E6E26BF' AND parent_object_id = OBJECT_ID('[Operation].[ProductReviews]'))
+    ALTER TABLE [Operation].[ProductReviews] ADD CONSTRAINT [DF__ProductRe__Revie__0E6E26BF] DEFAULT (getdate()) FOR [ReviewDate]
 GO
-ALTER TABLE [Operation].[ProductReviews] ADD CONSTRAINT [DF__ProductRe__IsVer__0F624AF8] DEFAULT ((0)) FOR [IsVerifiedPurchase]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__ProductRe__IsVer__0F624AF8' AND parent_object_id = OBJECT_ID('[Operation].[ProductReviews]'))
+    ALTER TABLE [Operation].[ProductReviews] ADD CONSTRAINT [DF__ProductRe__IsVer__0F624AF8] DEFAULT ((0)) FOR [IsVerifiedPurchase]
 GO
 PRINT N'Adding constraints to [Sales].[CustomerLoyalty]'
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__Total__08B54D69] DEFAULT ((0)) FOR [TotalPoints]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__Total__08B54D69' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__Total__08B54D69] DEFAULT ((0)) FOR [TotalPoints]
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__Loyal__09A971A2] DEFAULT ('Bronze') FOR [LoyaltyLevel]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__Loyal__09A971A2' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__Loyal__09A971A2] DEFAULT ('Bronze') FOR [LoyaltyLevel]
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__JoinD__0A9D95DB] DEFAULT (getdate()) FOR [JoinDate]
+IF NOT EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__JoinD__0A9D95DB' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] ADD CONSTRAINT [DF__CustomerL__JoinD__0A9D95DB] DEFAULT (getdate()) FOR [JoinDate]
 GO
 
