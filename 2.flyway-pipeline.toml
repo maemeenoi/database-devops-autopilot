@@ -10,34 +10,26 @@ id = "database-devops-autopilot-pipeline"
 name = "Database DevOps AutoPilot (CI/CD Pipeline)"
 databaseType = "SqlServer"
 
-[environments.development]
-# Environment variables resolved from GitHub Secrets during pipeline execution
-url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_DEV_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${env.AZURE_SQL_USER}"
-password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "Development Database (CI/CD)"
+[environments.Build]
+# Build environment for clean validation in CI/CD pipeline
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-build-001;encrypt=true;trustServerCertificate=false"
+user = "${env.TARGET_DATABASE_USERNAME}"
+password = "${env.TARGET_DATABASE_PASSWORD}"
+displayName = "Build Database (CI/CD Validation)"
 
-[environments.shadow]
-# Shadow database for automated validation in CI/CD pipeline
-url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_SHADOW_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${env.AZURE_SQL_USER}"
-password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "Shadow Database (CI/CD Validation)"
-provisioner = "clean"
+[environments.Test]
+# Test environment for UAT testing in CI/CD pipeline  
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-uat-002;encrypt=true;trustServerCertificate=false"
+user = "${env.TARGET_DATABASE_USERNAME}"
+password = "${env.TARGET_DATABASE_PASSWORD}"
+displayName = "Test Database (UAT)"
 
-[environments.uat]
-# Environment variables resolved from GitHub Secrets during pipeline execution
-url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_UAT_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${env.AZURE_SQL_USER}"
-password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "UAT Database (CI/CD)"
-
-[environments.production]
+[environments.Prod]
 # Production environment - requires manual approval in CI/CD pipeline
-url = "jdbc:sqlserver://${env.AZURE_SQL_SERVER}.database.windows.net:1433;databaseName=${env.FLYWAY_PROD_DATABASE};encrypt=true;trustServerCertificate=false"
-user = "${env.AZURE_SQL_USER}"
-password = "${env.AZURE_SQL_PASSWORD}"
-displayName = "Production Database (CI/CD)"
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-prod-003;encrypt=true;trustServerCertificate=false"
+user = "${env.TARGET_DATABASE_USERNAME}"
+password = "${env.TARGET_DATABASE_PASSWORD}"
+displayName = "Production Database"
 
 [flyway]
 locations = [ "filesystem:migrations" ]
@@ -55,46 +47,26 @@ mode = "all"
 [flyway.sqlserver.clean.schemas]
 exclude = [ "ExampleSchema1", "ExampleSchema2" ]
 
-[flywayDesktop]
-developmentEnvironment = "development"
-shadowEnvironment = "shadow"
-schemaModel = "./schema-model"
-
-[flywayDesktop.generate]
-undoScripts = true
-
 # =============================================================================
 # REQUIRED GITHUB SECRETS (configured in repository settings):
 # =============================================================================
-# AZURE_SQL_SERVER          → Your Azure SQL Server name (without .database.windows.net)
-# AZURE_SQL_USER             → Your Azure SQL username
-# AZURE_SQL_PASSWORD         → Your Azure SQL password
-# FLYWAY_DEV_DATABASE        → Development database name (e.g., db-autopilot-dev-001)
-# FLYWAY_SHADOW_DATABASE     → Shadow database name (e.g., db-autopilot-shadow-001)
-# FLYWAY_UAT_DATABASE        → UAT database name (e.g., db-autopilot-uat-001)
-# FLYWAY_PROD_DATABASE       → Production database name (e.g., db-autopilot-prod-001)
+# TARGET_DATABASE_USERNAME      → Your Azure SQL username (same for all environments)
+# TARGET_DATABASE_PASSWORD      → Your Azure SQL password (same for all environments)  
+# FLYWAY_EMAIL                  → Your Redgate account email
+# FLYWAY_TOKEN                  → Your Personal Access Token
+# FLYWAY_CLI_INSTALL            → true (enables CLI auto-install)
+# =============================================================================
+#
+# DATABASE NAMES (hardcoded in TOML - no secrets needed):
+# =============================================================================
+# Build: db-autopilot-build-xxx    → Clean validation database
+# Test:  db-autopilot-uat-xxx      → UAT testing database  
+# Prod:  db-autopilot-prod-xxx     → Production database
 # =============================================================================
 #
 # CI/CD PIPELINE FLOW:
 # =============================================================================
-# 1. Validate migrations against Shadow database (clean deployment test)
-# 2. Deploy to UAT environment for acceptance testing
-# 3. Manual approval gate for Production deployment
-# 4. Deploy to Production environment with rollback capability
-# =============================================================================
-
-[flyway.sqlserver.clean.schemas]
-exclude = [ "ExampleSchema1", "ExampleSchema2" ]
-
-[flywayDesktop]
-developmentEnvironment = "development"
-
-# =============================================================================
-# REQUIRED GITHUB SECRETS (configured in repository settings):
-# =============================================================================
-# AZURE_SQL_SERVER          → Your Azure SQL Server name (without .database.windows.net)
-# AZURE_SQL_USER             → Your Azure SQL username
-# AZURE_SQL_PASSWORD         → Your Azure SQL password
-# FLYWAY_DEV_DATABASE        → Development database name
-# FLYWAY_UAT_DATABASE        → UAT database name
+# 1. Build: Clean + migrate + undo validation (replaces shadow database)
+# 2. Test: Deploy to UAT for acceptance testing  
+# 3. Prod: Manual approval + production deployment
 # =============================================================================
