@@ -33,6 +33,7 @@ flyway.local.toml
 *local.toml
 flyway.dev.toml
 flyway.prod.toml
+*flyway-desktop.toml
 
 # Database backups and sensitive data
 *.sql.bak

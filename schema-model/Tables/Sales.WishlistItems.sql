@@ -3,8 +3,8 @@ CREATE TABLE [Sales].[WishlistItems]
 [WishlistItemID] [int] NOT NULL IDENTITY(1, 1),
 [WishlistID] [int] NOT NULL,
 [ProductID] [int] NOT NULL,
-[AddedDate] [datetime] NOT NULL CONSTRAINT [DF__WishlistI__Added__3493CFA7] DEFAULT (getdate()),
-[Priority] [int] NOT NULL CONSTRAINT [DF__WishlistI__Prior__3587F3E0] DEFAULT ((3)),
+[AddedDate] [datetime] NOT NULL CONSTRAINT [DF__WishlistI__Added__1EA48E88] DEFAULT (getdate()),
+[Priority] [int] NOT NULL CONSTRAINT [DF__WishlistI__Prior__1F98B2C1] DEFAULT ((3)),
 [Notes] [nvarchar] (500) NULL
 )
 GO
