@@ -61,7 +61,7 @@ jobs:
     env:
       stage: "Build"
       displayName: "Build"
-      DATABASE_NAME: "db-autopilot-dev-001"
+      DATABASE_NAME: "db-autopilot-dev-xxx"
       ENVIRONMENT: "Build" # This variable refers to the environment name present in the Flyway Projects TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
@@ -123,7 +123,7 @@ jobs:
     needs: build
     env:
       stage: "Test"
-      DATABASE_NAME: "db-autopilot-uat-001"
+      DATABASE_NAME: "db-autopilot-uat-xxx"
       ENVIRONMENT: "Test" # Refers to the environment in the Flyway Project TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
@@ -185,7 +185,7 @@ jobs:
     needs: test
     env:
       stage: "Prod"
-      DATABASE_NAME: "db-autopilot-prod-001"
+      DATABASE_NAME: "db-autopilot-prod-xxx"
       ENVIRONMENT: "Prod" # Refers to the environment in the Flyway Project TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"
@@ -232,37 +232,7 @@ jobs:
         with:
           name: flyway-reports-prod
           path: ${{ GITHUB.WORKSPACE }}/reports/${{ env.DATABASE_NAME }}-Run-${{ GITHUB.RUN_ID }}-${{ env.ENVIRONMENT }}-Check-Report.html
-      # Step 4 - Interactive Approval for Production Deployment
-      - name: Production Deployment Approval
-        shell: powershell
-        run: |
-          Write-Host "==============================================" -ForegroundColor Yellow
-          Write-Host "PRODUCTION DEPLOYMENT APPROVAL REQUIRED" -ForegroundColor Red
-          Write-Host "==============================================" -ForegroundColor Yellow
-          Write-Host ""
-          Write-Host "Environment: ${{ env.ENVIRONMENT }}" -ForegroundColor Cyan
-          Write-Host "Database: ${{ env.DATABASE_NAME }}" -ForegroundColor Cyan
-          Write-Host "Run ID: ${{ github.run_id }}" -ForegroundColor Cyan
-          Write-Host "Triggered by: ${{ github.actor }}" -ForegroundColor Cyan
-          Write-Host ""
-          Write-Host "Check the reports artifact for migration details before proceeding." -ForegroundColor Yellow
-          Write-Host ""
-          Write-Host "WARNING: This will deploy database changes to PRODUCTION!" -ForegroundColor Red
-          Write-Host ""
-          do {
-              $response = Read-Host "Do you want to proceed with PRODUCTION deployment? (yes/no)"
-              $response = $response.ToLower().Trim()
-              if ($response -eq "yes" -or $response -eq "y") {
-                  Write-Host "✅ Production deployment approved!" -ForegroundColor Green
-                  break
-              } elseif ($response -eq "no" -or $response -eq "n") {
-                  Write-Host "❌ Production deployment cancelled by user." -ForegroundColor Red
-                  exit 1
-              } else {
-                  Write-Host "Please enter 'yes' or 'no'" -ForegroundColor Yellow
-              }
-          } while ($true)
-      # Step 5 - Deploy pending migrations to production database
+      # Step 4 - Deploy pending migrations to production database
       - name: Migrate Production DB
         if: success()
         shell: cmd
