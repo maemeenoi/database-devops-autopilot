@@ -4,27 +4,33 @@ SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDE
 GO
 PRINT N'Dropping constraints from [Operation].[InventoryAudit]'
 GO
-ALTER TABLE [Operation].[InventoryAudit] DROP CONSTRAINT [DF__Inventory__Chang__3B0BC30C]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__Inventory__Chang__3B0BC30C' AND parent_object_id = OBJECT_ID('[Operation].[InventoryAudit]'))
+    ALTER TABLE [Operation].[InventoryAudit] DROP CONSTRAINT [DF__Inventory__Chang__3B0BC30C]
 GO
 PRINT N'Dropping constraints from [Operation].[ProductReviews]'
 GO
-ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__Revie__345EC57D]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__ProductRe__Revie__345EC57D' AND parent_object_id = OBJECT_ID('[Operation].[ProductReviews]'))
+    ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__Revie__345EC57D]
 GO
 PRINT N'Dropping constraints from [Operation].[ProductReviews]'
 GO
-ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__IsVer__3552E9B6]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__ProductRe__IsVer__3552E9B6' AND parent_object_id = OBJECT_ID('[Operation].[ProductReviews]'))
+    ALTER TABLE [Operation].[ProductReviews] DROP CONSTRAINT [DF__ProductRe__IsVer__3552E9B6]
 GO
 PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Total__2EA5EC27]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__Total__2EA5EC27' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Total__2EA5EC27]
 GO
 PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Loyal__2F9A1060]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__Loyal__2F9A1060' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__Loyal__2F9A1060]
 GO
 PRINT N'Dropping constraints from [Sales].[CustomerLoyalty]'
 GO
-ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__JoinD__308E3499]
+IF EXISTS (SELECT 1 FROM sys.default_constraints WHERE name = 'DF__CustomerL__JoinD__308E3499' AND parent_object_id = OBJECT_ID('[Sales].[CustomerLoyalty]'))
+    ALTER TABLE [Sales].[CustomerLoyalty] DROP CONSTRAINT [DF__CustomerL__JoinD__308E3499]
 GO
 PRINT N'Creating [Sales].[CustomerWishlists]'
 GO
