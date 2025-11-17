@@ -24,8 +24,6 @@ url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopi
 user = "${env.TARGET_DATABASE_USERNAME}"
 password = "${env.TARGET_DATABASE_PASSWORD}"
 displayName = "Test Database (UAT)"
-provisioner = "migrations"
-
 
 [environments.Prod]
 # Production environment - requires manual approval in CI/CD pipeline
@@ -33,7 +31,7 @@ url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopi
 user = "${env.TARGET_DATABASE_USERNAME}"
 password = "${env.TARGET_DATABASE_PASSWORD}"
 displayName = "Production Database"
-provisioner = "migrations"
+
 
 
 [flyway]
