@@ -61,7 +61,7 @@ jobs:
     env:
       stage: "Build"
       displayName: "Build"
-      DATABASE_NAME: "db-autopilot-build-001"
+      DATABASE_NAME: "db-autopilot-dev-001"
       ENVIRONMENT: "Build" # This variable refers to the environment name present in the Flyway Projects TOML file.
       TARGET_DATABASE_USERNAME: "${{ secrets.TARGET_DATABASE_USERNAME }}"
       TARGET_DATABASE_PASSWORD: "${{ secrets.TARGET_DATABASE_PASSWORD }}"

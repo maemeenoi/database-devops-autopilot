@@ -12,21 +12,21 @@ databaseType = "SqlServer"
 
 [environments.Build]
 # Build environment for clean validation in CI/CD pipeline
-url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-build-001;encrypt=true;trustServerCertificate=false"
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-dev-001;encrypt=true;trustServerCertificate=false"
 user = "${env.TARGET_DATABASE_USERNAME}"
 password = "${env.TARGET_DATABASE_PASSWORD}"
 displayName = "Build Database (CI/CD Validation)"
 
 [environments.Test]
 # Test environment for UAT testing in CI/CD pipeline  
-url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-uat-002;encrypt=true;trustServerCertificate=false"
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-uat-001;encrypt=true;trustServerCertificate=false"
 user = "${env.TARGET_DATABASE_USERNAME}"
 password = "${env.TARGET_DATABASE_PASSWORD}"
 displayName = "Test Database (UAT)"
 
 [environments.Prod]
 # Production environment - requires manual approval in CI/CD pipeline
-url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-prod-003;encrypt=true;trustServerCertificate=false"
+url = "jdbc:sqlserver://sqlbits.database.windows.net:1433;databaseName=db-autopilot-prod-001;encrypt=true;trustServerCertificate=false"
 user = "${env.TARGET_DATABASE_USERNAME}"
 password = "${env.TARGET_DATABASE_PASSWORD}"
 displayName = "Production Database"
@@ -59,7 +59,7 @@ exclude = [ "ExampleSchema1", "ExampleSchema2" ]
 #
 # DATABASE NAMES (hardcoded in TOML - no secrets needed):
 # =============================================================================
-# Build: db-autopilot-build-xxx    → Clean validation database
+# Build: db-autopilot-dev-xxx    → Clean validation database
 # Test:  db-autopilot-uat-xxx      → UAT testing database  
 # Prod:  db-autopilot-prod-xxx     → Production database
 # =============================================================================
